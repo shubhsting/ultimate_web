@@ -44,7 +44,7 @@ public class L001 {
     }
 
     public static void removenode(ArrayList<Graph_Edge>[] graph, int node) {
-        for (int i = 0; i < graph[node].size(); i++)
+        for (int i = graph[node].size() - 1; i >= 0; i--)
             removeEdge(graph, node, graph[node].get(i).dest);
     }
 
@@ -71,6 +71,44 @@ public class L001 {
         return count;
     }
 
+    public static void hamiltonian_path(ArrayList<Graph_Edge>[] graph, int src, int osrc, boolean[] vis, int count) {
+        if (count == graph.length - 1) {
+            int idx = findEdge(graph, src, osrc);
+            if (idx != -1)
+                System.out.println("cycle");
+            else
+                System.out.println("path");
+            return;
+        }
+        vis[src] = true;
+        for (Graph_Edge ed : graph[src])
+            if (!vis[ed.dest])
+                hamiltonian_path(graph, ed.dest, osrc, vis, count + 1);
+        vis[src] = false;
+    }
+
+    public static int dfs_GCC(ArrayList<Graph_Edge>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        int count = 0;
+        for (Graph_Edge ed : graph[src])
+            if (!vis[ed.dest])
+                count += dfs_GCC(graph, ed.dest, vis);
+        return count + 1;
+    }
+
+    public static int GCC(ArrayList<Graph_Edge>[] graph) {
+        boolean[] vis = new boolean[graph.length];
+        int noOFComp = 0;
+        int largest = 0;
+        for (int i = 0; i < graph.length; i++) {
+            if (!vis[i]) {
+                noOFComp++;
+                int compsize = dfs_GCC(graph, i, vis);
+                largest = Math.max(largest, compsize);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         // ArrayList<Graph_Edge>[] graph = new ArrayList[7];
         // for (int i = 0; i < 7; i++)
@@ -79,12 +117,8 @@ public class L001 {
         // addEdge(graph, 3, 5, 10);
         // addEdge(graph, 6, 4, 7);
         // display(graph);
-        int[] arr = { 10, 20, 30 };
-        for (int i = 0; i < 3; i++)
-            System.out.print(arr[i] + " ");
-
-        for (int ele : arr)
-            System.out.println(ele + " ");
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 1000; i++)
+            list.add(i);
     }
-
 }
