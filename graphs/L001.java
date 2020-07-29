@@ -120,5 +120,8 @@ public class L001 {
         ArrayList<Integer> list = new ArrayList<>();
         for (int i = 0; i < 1000; i++)
             list.add(i);
+        boolean res = false;
+        if (res)
+            System.out.println("hello");
     }
 }
