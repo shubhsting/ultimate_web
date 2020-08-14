@@ -163,4 +163,101 @@ public class L001 {
         }
         return dp[N];
     }
+
+    public boolean[][] isPalindromic_Substr(String str) {
+        int n = str.length();
+        boolean[][] dp = new boolean[n][n];
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n && i < n; i++, j++) {
+                if (i == j)
+                    dp[i][j] = true;
+                else if (gap == 1)
+                    dp[i][j] = str.charAt(i) == str.charAt(j);
+                else {
+                    dp[i][j] = (str.charAt(i) == str.charAt(j)) && (dp[i + 1][j - 1]);
+                }
+            }
+        }
+        return dp;
+    }
+
+    public String longestPalindromic_Substr(String str) {
+        int n = str.length();
+        int dp[][] = new int[n][n];
+        int maxLength = 0;
+        int si = 0;
+        int ei = 0;
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n && i < n; j++, i++) {
+                if (gap == 0)
+                    dp[i][j] = 1;
+                else if (gap == 1) {
+                    if (str.charAt(i) == str.charAt(j))
+                        dp[i][j] = 2;
+                } else {
+                    if ((str.charAt(i) == str.charAt(j)) && (dp[i + 1][j - 1] != 0))
+                        dp[i][j] = gap + 1;
+                }
+                if (dp[i][j] > maxLength) {
+                    maxLength = dp[i][j];
+                    si = i;
+                    ei = j;
+                }
+            }
+        }
+        return str.substring(si, ei + 1);
+    }
+
+    // memoized solution
+    public static int longestPalindromic_Subseq(String str, int si, int ei, int[][] dp) {
+        if (si > ei)
+            return 0;
+        if (si == ei)
+            return dp[si][ei] = 1;
+
+        if (dp[si][ei] != 0)
+            return dp[si][ei];
+        int count = 0;
+        if (str.charAt(si) == str.charAt(ei))
+            count = longestPalindromic_Subseq(str, si + 1, ei - 1, dp) + 2;
+        else
+            count = Math.max(longestPalindromic_Subseq(str, si + 1, ei, dp),
+                    longestPalindromic_Subseq(str, si, ei - 1, dp));
+
+        return dp[si][ei] = count;
+    }
+
+    public static int longestPalindromic_Subseq_DP(String str) {
+
+        int n = str.length();
+        int dp[][] = new int[n][n];
+        int maxLength = 0;
+
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n && i < n; j++, i++) {
+                if (gap == 0)
+                    dp[i][j] = 1;
+
+                else {
+                    if (str.charAt(i) == str.charAt(j)) {
+                        dp[i][j] = dp[i + 1][j - 1] + 2;
+                    } else {
+                        dp[i][j] = Math.max(dp[i + 1][j], dp[i][j - 1]);
+                    }
+
+                }
+
+                if (dp[i][j] > maxLength)
+                    maxLength = dp[i][j];
+
+            }
+        }
+        return maxLength;
+    }
+
+    public int longestcommonsubsequence(String str1, String str2, int l1, int l2) {
+
+    }
+
+    
 }
